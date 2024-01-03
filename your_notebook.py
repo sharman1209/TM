@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[17]:
+# In[18]:
 
 
 import pandas as pd
@@ -40,8 +40,8 @@ def toggle_search_method(change):
         manual_search_state_button.disabled = False
 
 # Read school data from the Excel file into a DataFrame
-excel_file_path = r'C:\Users\sharm\TM Interim Dashboard\4221 TM UNIFIBIZ.xlsx'
-school_df = pd.read_excel(excel_file_path, sheet_name='List TM Interim Sites')
+excel_file_url = 'https://github.com/sharman1209/TM/raw/main/4221%20TM%20UNIFIBIZ.xlsx'
+school_df = pd.read_excel(excel_file_url, sheet_name='List TM Interim Sites')
 
 # Function to filter school codes based on the entered query (case-insensitive)
 def filter_school_codes(query):
