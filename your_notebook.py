@@ -1,12 +1,43 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[7]:
+# In[17]:
 
 
 import pandas as pd
 from ipywidgets import widgets, interact, Output, VBox, HBox
 from IPython.display import display
+
+# Function to toggle the search method and update the interface accordingly
+def toggle_search_method(change):
+    search_method = change.new
+    if search_method == 'By School Code':
+        school_code_input.disabled = False
+        school_name_input.disabled = True
+        dropdown_school_codes.layout.visibility = 'visible'
+        dropdown_school_names.layout.visibility = 'hidden'
+        dropdown_states.disabled = True
+        manual_search_code_button.disabled = False
+        manual_search_name_button.disabled = True
+        manual_search_state_button.disabled = True
+    elif search_method == 'By School Name':
+        school_code_input.disabled = True
+        school_name_input.disabled = False
+        dropdown_school_codes.layout.visibility = 'hidden'
+        dropdown_school_names.layout.visibility = 'visible'
+        dropdown_states.disabled = True
+        manual_search_code_button.disabled = True
+        manual_search_name_button.disabled = False
+        manual_search_state_button.disabled = True
+    elif search_method == 'By State':
+        school_code_input.disabled = True
+        school_name_input.disabled = True
+        dropdown_school_codes.layout.visibility = 'hidden'
+        dropdown_school_names.layout.visibility = 'hidden'
+        dropdown_states.disabled = False
+        manual_search_code_button.disabled = True
+        manual_search_name_button.disabled = True
+        manual_search_state_button.disabled = False
 
 # Read school data from the Excel file into a DataFrame
 excel_file_path = r'C:\Users\sharm\TM Interim Dashboard\4221 TM UNIFIBIZ.xlsx'
@@ -109,8 +140,20 @@ school_code_input = widgets.Text(description="School Code:", disabled=False)
 # Create input box for searching by school name
 school_name_input = widgets.Text(description="School Name:", disabled=True)
 
+# Create dropdown for school codes
+dropdown_school_codes = widgets.Dropdown(options=[], description="Select School Code:")
+
+# Create dropdown widget for school names
+dropdown_school_names = widgets.Dropdown(options=[], description="Select School Name:")
+
 # Create dropdown for selecting the state
 dropdown_states = widgets.Dropdown(options=['Select'] + school_df['NEGERI'].unique().tolist(), description="Select State:")
+
+# Observe changes in school codes dropdown
+dropdown_school_codes.observe(handle_code_dropdown_selection, names='value')
+
+# Observe changes in school names dropdown
+dropdown_school_names.observe(handle_name_dropdown_selection, names='value')
 
 # Link the input boxes to the capitalize_text function
 school_code_input.observe(capitalize_text, names='value')
@@ -139,37 +182,6 @@ manual_search_name_button.on_click(lambda b: search_school_info_by_name(school_n
 # Create a button for manual search by state
 manual_search_state_button = widgets.Button(description="Search", disabled=True)
 manual_search_state_button.on_click(lambda b: search_school_info_by_state(dropdown_states.value))
-
-# Define a function to toggle the search method and update the interface accordingly
-def toggle_search_method(change):
-    search_method = change.new
-    if search_method == 'By School Code':
-        school_code_input.disabled = False
-        school_name_input.disabled = True
-        dropdown_school_codes.layout.visibility = 'visible'
-        dropdown_school_names.layout.visibility = 'hidden'
-        dropdown_states.disabled = True
-        manual_search_code_button.disabled = False
-        manual_search_name_button.disabled = True
-        manual_search_state_button.disabled = True
-    elif search_method == 'By School Name':
-        school_code_input.disabled = True
-        school_name_input.disabled = False
-        dropdown_school_codes.layout.visibility = 'hidden'
-        dropdown_school_names.layout.visibility = 'visible'
-        dropdown_states.disabled = True
-        manual_search_code_button.disabled = True
-        manual_search_name_button.disabled = False
-        manual_search_state_button.disabled = True
-    elif search_method == 'By State':
-        school_code_input.disabled = True
-        school_name_input.disabled = True
-        dropdown_school_codes.layout.visibility = 'hidden'
-        dropdown_school_names.layout.visibility = 'hidden'
-        dropdown_states.disabled = False
-        manual_search_code_button.disabled = True
-        manual_search_name_button.disabled = True
-        manual_search_state_button.disabled = False
 
 # Attach event handlers to input boxes and dropdowns
 search_method_dropdown.observe(toggle_search_method, names='value')
